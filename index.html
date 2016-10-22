@@ -6,6 +6,40 @@
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="stylesheet" href="node_modules/shower-ribbon/styles/screen-16x10.css">
+	<style media="screen">
+		.slide p,
+		.slide h2,
+		.slide li {
+			color: black;
+			font-family: 'Times New Roman', serif;
+		}
+		.slide h2:not(.shout) {
+			font-family: PT Sans, sans-serif;
+		}
+		.slide .shout {
+			font-weight: 500;
+			font-size: 90px;
+		}
+		.shout small {
+			font-size: 20px;
+		}
+		.slide::after{
+			content: none;
+		}
+		.slide blockquote {
+			font-style: normal;
+		}
+		.slide.terms {
+			padding-top: 30px;
+		}
+		.slide .statement {
+			font-family: FiraCode;
+		}
+		.accent {
+			font-size: 32px;
+		}
+		mark.important { background: #c00; color: #fff; }
+	</style>
 </head>
 <body class="shower list">
 	<header class="caption">
@@ -13,10 +47,287 @@
 	</header>
 
 	<section class="slide">
-		<h2 class="shout">Abstraction Classes</h2>
+		<h2 class="shout">
+			Abstraction Classes in Software Design<br>
+			<small>Alexey Raspopov, Papers We Love @ Kyiv, Oct 22nd</small>
+		</h2>
 	</section>
 
-	<div class="progress"></div>
+	<section class="slide"><img src="pictures/abstract.png" class="cover w"></section>
+
+	<section class="slide">
+		<h2>Goals</h2>
+
+		<ul>
+			<li>Provide formal vocabulary for architectural statement definition</li>
+			<li>Distinguish <strong>Strategic</strong>, <strong>Tactical</strong>, and <strong>Implementation</strong> statements</li>
+		</ul>
+	</section>
+
+	<section class="slide terms">
+		<p><strong>Strategic design statements</strong> articulate design decisions that determine <mark>the primary behavioural</mark> and <mark>structural properties</mark> of a program (software system). Strategic decisions address global, system-wide concerns and carry the most consequential implications. </p>
+
+		<p class="next"><strong>Tactical design statements</strong> articulate design decisions that are concerned with <mark>a specific module</mark>. Tactical decisions often <mark>describe a pattern</mark> of correlations between one collection of modules (objects, procedures, classes etc.) and another.</p>
+
+		<p class="next">At the lowest level of abstraction are concrete statements that are concerned with specific <strong>implementation details</strong>. An Implementation statement is not only ‘local’ but also ‘extensional’: it <mark>directly correlates to specific part</mark> of a specific program. </p>
+	</section>
+
+	<section class="slide terms">
+		<p><strong>Architecture</strong> is concerned with the selection of architectural elements, their interaction, and the constraints on those elements and their interactions...</p>
+
+		<p class="next"><strong>Design</strong> is concerned with the modularization and detailed interfaces of the design elements, their algorithms and procedures, and the data types needed to support the architecture and to satisfy the requirements.</p>
+	</section>
+
+	<section class="slide"><img src="pictures/informal-view.png" class="cover w"></section>
+
+	<section class="slide">
+		<h2 class="shout">Intension/Locality <br>Criterion</h2>
+	</section>
+
+	<section class="slide"><img src="pictures/criterion-introduction.png" class="cover w"></section>
+	<section class="slide"><img src="pictures/criterion-schema.png" class="cover w"></section>
+
+	<section class="slide">
+		<h2>The Intension/Locality Hypothesis</h2>
+		<ul>
+			<li>Strategic statements are in <em>Non-local Intensional</em></li>
+			<li>Tactical statements are in <em>Local Intensional</em></li>
+			<li>Implementation statements are in <em>Local Extensional</em></li>
+		</ul>
+	</section>
+
+	<section class="slide"><img src="pictures/criterion-examples.png" class="cover w"></section>
+
+	<section class="slide">
+		<h2>Universal Base Class</h2>
+		<p>There is a class from which all other classes inherit.</p>
+		<p>φ = ∀<em>c</em> • <em>c</em>∈<em>Class</em> ∧ <em>c</em>≠<em>Object</em> ⇒ <em>Inherit</em>(<em>c</em>, <em>Object</em>)</p>
+	</section>
+
+	<section class="slide">
+		<p>p =</p>
+
+		<pre>
+			<code>class Object { }</code>
+			<code>class Foo extends Object {}</code>
+		</pre>
+
+		<p class="next accent"><strong>p ⊨ φ</strong></p>
+	</section>
+
+	<section class="slide">
+		<p>p' =</p>
+
+		<pre>
+			<code>class Object { }</code>
+			<code>class Foo extends Object {}</code>
+			<code><mark>class Bar {}</mark> <span class="comment">// extends?</span></code>
+		</pre>
+
+		<p class="next accent"><strong>p' ⊭ φ</strong></p>
+	</section>
+
+	<section class="slide">
+		<h2>Universal Base Class</h2>
+
+		<p>Preserved under <strong>expansion</strong>? <mark class="next important">NO</mark></p>
+		<p class="next">UBC is in <strong>Non-local Intensional</strong></p>
+		<p class="next">Compiler must check each and every class to make sure that all of them inherit from some other class.</p>
+	</section>
+
+	<section class="slide"><img src="pictures/intuition.png" class="cover w"></section>
+
+	<section class="slide">
+		<h2 class="shout">Finite Structures &amp; <br>Tarski's Truth Conditions</h2>
+	</section>
+
+	<section class="slide">
+		<h2>Finite Structures</h2>
+
+		<p>Finite structure M is an ordered pair &lt;U<sub>M</sub>, R<sub>M</sub>&gt; such that U<sub>M</sub>={a<sub>1</sub>,...a<sub>k</sub>} is a finite set of entities, and R<sub>M</sub>={R<sub>1</sub>,...R<sub>k</sub>} is a finite set of relations over the entitites in U<sub>M</sub>.</p>
+	</section>
+
+	<section class="slide">
+		<h2>Finite Structure of UBC</h2>
+		<p><strong>Entities</strong>: <em>Foo</em>, <em>Object</em></p>
+		<p><strong>Relations</strong>:</p>
+		<ul>
+			<li><em>Class</em> = { <em>Foo</em>, <em>Object</em> }</li>
+			<li><em>Inherit</em> = { (<em>Foo</em>, <em>Object</em>) }</li>
+		</ul>
+	</section>
+
+	<section class="slide">
+		<h2>Tarski's Truth Conditions</h2>
+
+		<p><em>P</em> is true if, and only if, <em>P</em>.</p>
+		<p class="next">For all <em>x</em>, <em>True</em>(x) if and only if <em>φ</em>(x),</p>
+	</section>
+
+	<section class="slide">
+		<h2>Locality Criterion</h2>
+		<p>A statement <em>φ</em> is <em>local</em> if, and only if, it is preserved under <em>expansion</em>.</p>
+		<p class="next">A statement <em>φ</em> is <em>local</em> if, and only if, a program that satisfies cannot be <em>expanded</em> into a program that violates it.</p>
+	</section>
+
+	<section class="slide">
+		<h2>Intension Criterion</h2>
+		<p>A statement <em>φ</em> is <em>extensional</em> if, and only if, it is preserved both under <em>expansion</em> and under <em>reduction</em>.</p>
+		<p class="next">A statement <em>φ</em> is <em>extensional</em> if, and only if, a program that satisfies cannot be <em>expanded</em> or <em>reduced</em> into a program that violates it.</p>
+	</section>
+
+	<section class="slide">
+		<h2>Expansion Formally</h2>
+
+		<p>M = &lt;U, R&gt; — finite strucuture</p>
+		<p class="next">M' = &lt;U', R'&gt; — is an expansion of M if it can result by:</p>
+		<ul class="next">
+			<li>adding a non-empty finite set of new entities to <code>U</code>, i.e. <code>{b<sub>1</sub>,...b<sub>j</sub>}</code></li>
+			<li>adding to each <code>n</code>-ary relation <code>r</code> in <code>R</code> zero or more <code>n</code>-tuples, each of which contains at least one of <code>b<sub>1</sub>,...b<sub>j</sub></code></li>
+		</ul>
+	</section>
+
+	<section class="slide">
+		<h2>Valid Expansion</h2>
+
+		<pre>
+			<code>class Object {}</code>
+			<code>class Foo extends Object {}</code>
+		</pre>
+
+		<pre class="next">
+			<code>class Object {}</code>
+			<code>class Foo extends Object {}</code>
+			<code><mark>class Bar {}</mark></code>
+		</pre>
+	</section>
+
+	<section class="slide">
+		<h2>Invalid Expansion</h2>
+
+		<pre>
+			<code>class Object {}</code>
+			<code>class Foo extends Object {}</code>
+		</pre>
+
+		<pre class="next">
+			<code>class Object {}</code>
+			<code>class Foo extends Object {</code>
+			<code>  <mark>someMethod() {}</mark></code>
+			<code>}</code>
+		</pre>
+	</section>
+
+	<section class="slide"><img src="pictures/layered-architecture.png" class="cover w"></section>
+
+	<section class="slide">
+		<h2>Layered Architecture</h2>
+
+		<p>A layered system is organized hierarchically, each layer providing service to the layer above it and serving as a client to the layer below</p>
+	</section>
+
+	<section class="slide">
+		<h2>Layered Architecture (Formally)</h2>
+
+		<ul>
+			<li>Each <strong>element</strong> belongs to exactly one <strong>layer</strong></li>
+			<li>Each <strong>element</strong> may depend (invoke, inherit, etc) only on <strong>elements</strong> of the same or lower <strong>layers</strong></li>
+		</ul>
+	</section>
+
+	<section class="--slide">
+		<p>∀ ∃ ∃! ∈ ∉ ∧ ∨ ⇒ ⊨ ⊭ •</p>
+		<p class="statement">∀x ∀m ∈ Method ∀c ∈ Class • <br>PrivateMember(x, c) ∧ Access(m, x) ⇒ Member(m, c) ∨ Friend(m, c)</p>
+		<p>ρ ⊧ φ</p>
+	</section>
+
+	<section class="slide">
+		<p><em>φ</em> = </p>
+		<p>∀<em>x</em> ∃!<em>k</em>∈<em>N</em> • <em>Layer</em>(<em>x</em>) = <em>k</em></p>
+		<p>∀<em>x</em>,<em>y</em> • <em>Depend</em>(<em>x</em>, <em>y</em>) ⇒ <em>Layer</em>(<em>x</em>) ≥ <em>Layer</em>(<em>y</em>)</p>
+	</section>
+
+	<section class="slide">
+		<h2>Finite Structure</h2>
+
+		<p><strong>Entities</strong>: <em>UserProfileView</em>, <em>UserStore</em></p>
+		<p><strong>Relations</strong>:</p>
+		<ul>
+			<li><em>Layer</em> = { (<em>UserProfileView</em>, 2), (<em>UserStore</em>, 1) }</li>
+			<li><em>Depend</em> = { (<em>UserProfileView</em>, <em>UserStore</em>) }</li>
+		</ul>
+	</section>
+
+	<section class="slide">
+		<h2>Finite Structure (Expansion)</h2>
+
+		<p><strong>Entities</strong>: <em>UserProfileView</em>, <em>UserStore</em><mark>, <em>FriendsStore</em></mark></p>
+		<p><strong>Relations</strong>:</p>
+		<ul>
+			<li><em>Layer</em> = { (<em>UserProfileView</em>, 2), (<em>UserStore</em>, 1)<mark>, (<em>FriendsStore</em>, 1)</mark> }</li>
+			<li><em>Depend</em> = { (<em>UserProfileView</em>, <em>UserStore</em>)<mark>, (<em>FriendsStore</em>, <em>UserProfileView</em>)</mark> }</li>
+		</ul>
+
+		<p class="next"><em>Depend</em>(<em>FriendsStore</em>, <em>UserProfileView</em>) but <em>Layer</em>(<em>FriendsStore</em>) &lt; <em>Layer</em>(<em>UserProfileView</em>)</p>
+	</section>
+
+	<section class="slide">
+		<h2 class="shout">Architectural Mismatch</h2>
+	</section>
+
+	<section class="slide"><img src="pictures/bridge-mismatch.jpg" class="cover w"></section>
+
+	<section class="slide">
+		<p>A program <em>p</em> assumes all data to be communicated is represented as ASCII strings.</p>
+
+		<p class="next"><em>φ</em> — assumtion</p>
+		<p class="next"><em>p</em> ⊨ <em>φ</em></p>
+	</section>
+
+	<section class="slide">
+		<p>A program <em>q</em> includes program <em>p</em>, but it is not an app where <em>p</em> is "intended to operate".</p>
+
+		<p class="next"><em>q</em> — App</p>
+		<p class="next"><em>q</em> ⊭ <em>φ</em></p>
+
+		<p class="next"><em>p</em> and <em>q</em> mismatch on <em>φ</em></p>
+		<p class="next"><em>φ</em> is non-local intensional</p>
+	</section>
+
+	<section class="slide">
+		<h2 class="shout">Practical Implications</h2>
+	</section>
+
+	<section class="slide">
+		<ul>
+			<li>Make architectural (non-local) assumptions explicit</li>
+			<li>Minimize the number of non-local assumptions</li>
+		</ul>
+	</section>
+
+	<section class="slide">
+		<ul>
+			<li>Non-local design decisions must be taken (and made explicit) early</li>
+			<li class="next">Each non-local decision may potentially violate every other design decision (architectural mismatch)</li>
+			<li class="next">Local design decisions have limited consequences and are thus better postponed to the point following all non-local design decisions</li>
+		</ul>
+	</section>
+
+	<section class="slide">
+		<ul>
+			<li>When developing a new component, minimize the non-local assumptions it makes and make them explicit</li>
+			<li class="next">When assembling an application from existing components, use only components whose non-local assumptions "match"</li>
+			<li class="next">Tools that enforce non-local rules are inherently different from tools that verify local statements</li>
+		</ul>
+	</section>
+
+	<section class="slide">
+		<ul>
+			<li><a href="http://dces.essex.ac.uk/technical-reports/2004/csm-411.pdf">Abstraction Classes in Software Design</a></li>
+			<li><a href="http://www.sei.cmu.edu/library/assets/icse03-1.pdf">Architecture, Design, Implementation</a></li>
+		</ul>
+	</section>
+
 	<script src="node_modules/shower-core/shower.min.js"></script>
 </body>
 </html>
